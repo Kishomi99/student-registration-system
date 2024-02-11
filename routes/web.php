@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers;
+use App\Http\Controllers\StudentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,13 +14,9 @@ use App\Http\Controllers;
 |
 */
 
-Route::get('/', function () {
-    return view('pages.index');
-});
-Route::get('/list', function () {
-    return view('pages.list');
-});
+Route::get('/', [StudentController::class, 'index'])->name('home');
+Route::resource('students', StudentController::class);
 
-Route::resource('/student', StudentController::class);
+
 
 

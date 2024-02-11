@@ -2,16 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.lable-container{
-    @apply flex items-center justify-between h-14 w-full 
-    
-}
-
-.lable{
-    @apply block text-gray-600 text-sm font-semibold
-    
-
-}
 
 
  

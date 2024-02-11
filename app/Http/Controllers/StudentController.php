@@ -4,72 +4,81 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Student;
+use App\Http\Requests\StudentStoreRequest;
 
 class StudentController extends Controller
-{
-    protected $student;
-
-         public function __construct() {
-            $this->student = new Student();
-        }
-    
+{    
         public function index()
+        {            
+            $student = Student::all();
+            return view('pages.index', ['students' => $student]);
+        }
+        public function create()
         {
-            $response[]= $this->student->all();
-            return view('pages.index')->with($response);
+        return view('pages.create');
         }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
         
-    }
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
-    {
-        $this->student->create($request->all());
-        return redirect()->back();
+    {  
+        $request->validate([
+            'stu_name' => 'required|string',
+            'email' => 'required|string',
+            'phone_no' => 'required|integer',
+            'gender' => 'required|string',
+            'dob' => 'required|date',
+            'address' => 'required|string'
+        ]);     
+        $student = Student::create([
+            'stu_name' => $request->stu_name,
+            'email' => $request->email,
+            'phone_no' => $request->phone_no,
+            'gender' => $request->gender,
+            'dob' => $request->dob,
+            'address' => $request->address
+        ]);
+        return redirect()->route('students.index')->with('success', 'Success, New Student has been added successfully!');
     }
-    
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        $response ['student']=$this->student->find($id);
-        return view('pages.edit')->with($response);
+        $student = Student::findOrFail($id);
+        return view('pages.edit', compact('student'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
-    {
-        $student = $this->stuent->find($id);
-        $student->update(array_merge($student->toArray(), $request->toArray()));
-        return redirect('student');
+    {    
+        $request->validate([
+            'stu_name' => 'required|string',
+            'email' => 'required|string',
+            'phone_no' => 'required|integer',
+            'gender' => 'required|string',
+            'dob' => 'required|date',
+            'address' => 'required|string'
+        ]); 
+        $student = Student::findOrFail($id);
+        
+        
+        $student->update([
+            'stu_name' => $request->stu_name,
+            'email' => $request->email,
+            'phone_no' => $request->phone_no,
+            'gender' => $request->gender,
+            'dob' => $request->dob,
+            'address' => $request->address
+        ]);
+        
+
+        // Redirect the user back to the student's edit page with a success message
+        return redirect()->route('students.index', $student->id)->with('update', 'Student updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        $student = $this->student->find($id);
+        $student = Student::findOrFail($id);
         $student->delete();
-        return redirect('student');
+        return redirect()->route('students.index')->with('delete', 'Student deleted successfully.');
     }
+    
 }

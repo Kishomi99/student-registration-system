@@ -9,7 +9,7 @@ class Student extends Model
 {
     protected $table = 'students';
     protected $primarykey ='id';
-    protected $filltable =[
+    protected $fillable =[
         'stu_name',
         'email',
         'phone_no',
